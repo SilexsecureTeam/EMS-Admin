@@ -39,7 +39,7 @@ class PagesController extends Controller
 
             // Update text fields
             $page->header_title = $request->header_title;
-            $page->header_description = $request->header_title;
+            $page->header_description = $request->header_description;
             $page->title_1 = $request->title_1;
             $page->content_1 = $request->content_1;
             $page->title_2 = $request->title_2;

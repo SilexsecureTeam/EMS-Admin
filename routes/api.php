@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\PagesController;
 
+use function Pest\Laravel\json;
+
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::post('/login', [LoginController::class, 'login']);
@@ -21,3 +23,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/page/update', [PagesController::class, 'storeOrUpdate']);
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
 });
+Route::get('/ping', fn() => response()->json([
+    'status' => true,
+    'message' => 'Alive',
+]));
+Route::fallback(fn() => response()->json([
+    'status' => false,
+    'message' => 'resource not found',
+]));
