@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('programs', function (Blueprint $table) {
+        Schema::create('program_reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('parent_page');
-            $table->text('header_content');
+            $table->unsignedBigInteger('program_id');
+            $table->foreign('program_id')->references('id')->on('programs')->onDelete('cascade');
+            $table->string('reviewer_name');
+            $table->text('review');
+            $table->unsignedTinyInteger('rating');
             $table->timestamps();
         });
     }
@@ -24,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('programs');
+        Schema::dropIfExists('program_reviews');
     }
 };
