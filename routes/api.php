@@ -43,10 +43,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('blogs/{id}', [BlogController::class, 'destroy']);
     // career
     Route::get('careers', [CareerController::class, 'index']);
-    Route::post('careers', [CareerController::class, 'store']);
-    Route::get('careers/{id}', [CareerController::class, 'show']);
-    Route::put('careers/{id}', [CareerController::class, 'update']);
-    Route::delete('careers/{id}', [CareerController::class, 'destroy']);
+    Route::post('careers', [CareerController::class, 'storeOrUpdate']);
+    // Route::delete('careers/{id}', [CareerController::class, 'destroy']);
 });
 
 // programs
