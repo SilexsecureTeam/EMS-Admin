@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\BlogController;
 use App\Http\Controllers\API\CareerController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
 use App\Http\Controllers\API\PagesController;
@@ -47,7 +48,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('careers', [CareerController::class, 'index']);
     Route::post('careers', [CareerController::class, 'storeOrUpdate']);
     // Route::delete('careers/{id}', [CareerController::class, 'destroy']);
-
     // Gallery
     Route::get('gallery', [GalleryController::class, 'index']);
     Route::post('gallery', [GalleryController::class, 'store']);
@@ -55,6 +55,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // enrol now
     Route::get('/enrol-now', [EnrolNowController::class, 'show']);
     Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);
+    // contact
+    Route::get('/contact', [ContactController::class, 'index']);
 });
 
 // programs
@@ -77,3 +79,7 @@ Route::get('/enrol-now/download/{id}', [EnrolNowController::class, 'download']);
 
 // gallery
 Route::get('gallery', [GalleryController::class, 'index']);
+
+// contact
+Route::post('/contact', [ContactController::class, 'store']);
+
