@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\BlogController;
 use App\Http\Controllers\API\CareerController;
+use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
 use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
@@ -50,7 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Gallery
     Route::get('gallery', [GalleryController::class, 'index']);
     Route::post('gallery', [GalleryController::class, 'store']);
-    Route::put('gallery/{id}', [GalleryController::class, 'update']); 
+    Route::put('gallery/{id}', [GalleryController::class, 'update']);
+    // enrol now
+    Route::get('/enrol-now', [EnrolNowController::class, 'show']);
+    Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);
 });
 
 // programs
@@ -66,3 +70,10 @@ Route::get('blogs', [BlogController::class, 'index']);
 
 // careers
 Route::get('careers', [CareerController::class, 'index']);
+
+// enrol
+Route::get('/enrol-now', [EnrolNowController::class, 'show']);
+Route::get('/enrol-now/download/{id}', [EnrolNowController::class, 'download']);
+
+// gallery
+Route::get('gallery', [GalleryController::class, 'index']);
