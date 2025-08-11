@@ -15,6 +15,6 @@ class ProgramReview extends Model
 
     public function programs()
     {
-        return $this->belongsTo(Program::class);
+        return $this->belongsTo(Program::class, 'program_id');
     }
 }

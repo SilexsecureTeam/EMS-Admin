@@ -4,6 +4,8 @@ use App\Http\Controllers\API\Auth\LoginController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
+use App\Http\Controllers\API\BlogController;
+use App\Http\Controllers\API\CareerController;
 use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
 
@@ -33,6 +35,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/programs', [ProgramController::class, 'store']);
     Route::put('/programs/{slug}', [ProgramController::class, 'update']);
     Route::delete('/programs/{slug}', [ProgramController::class, 'destroy']);
+    // blog
+    Route::get('blogs', [BlogController::class, 'index']);     
+    Route::post('blogs', [BlogController::class, 'store']);    
+    Route::get('blogs/{slug}', [BlogController::class, 'show']); 
+    Route::put('blogs/{id}', [BlogController::class, 'update']); 
+    Route::delete('blogs/{id}', [BlogController::class, 'destroy']);
+    // career
+    Route::get('careers', [CareerController::class, 'index']);
+    Route::post('careers', [CareerController::class, 'store']);
+    Route::get('careers/{id}', [CareerController::class, 'show']);
+    Route::put('careers/{id}', [CareerController::class, 'update']);
+    Route::delete('careers/{id}', [CareerController::class, 'destroy']);
 });
 
 // programs
@@ -40,3 +54,11 @@ Route::prefix('programs')->group(function () {
     Route::get('/', [ProgramController::class, 'index']);
     Route::get('{slug}', [ProgramController::class, 'show']);
 });
+
+// blog
+Route::get('blogs/top-stories', [BlogController::class, 'topStories']);
+Route::get('blogs/{slug}', [BlogController::class, 'show']); // Show single blog
+Route::get('blogs', [BlogController::class, 'index']);
+
+// careers
+Route::get('careers', [CareerController::class, 'index']);
