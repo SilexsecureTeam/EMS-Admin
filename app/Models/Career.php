@@ -11,5 +11,6 @@ class Career extends Model
         'content',
         'placement_header',
         'email',
+        'image'
     ];
 }
