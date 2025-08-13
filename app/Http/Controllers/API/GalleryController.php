@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
+    protected function appendFullImageUrls($gallery)
+    {
+        foreach (['image1', 'image2', 'image3'] as $imageField) {
+            $gallery->$imageField = $gallery->$imageField
+                ? asset('storage/' . $gallery->$imageField)
+                : null;
+        }
+        return $gallery;
+    }
+
     public function store(Request $request)
     {
         try {
@@ -31,6 +41,9 @@ class GalleryController extends Controller
             }
 
             $gallery = Gallery::create($data);
+
+            // Append full URLs
+            $gallery = $this->appendFullImageUrls($gallery);
 
             return response()->json([
                 'status'  => true,
@@ -75,6 +88,9 @@ class GalleryController extends Controller
 
             $gallery->update($data);
 
+            // Append full URLs
+            $gallery = $this->appendFullImageUrls($gallery);
+
             return response()->json([
                 'status'  => true,
                 'message' => 'Gallery item updated successfully.',
@@ -89,10 +105,11 @@ class GalleryController extends Controller
         }
     }
 
-
     public function index()
     {
-        $galleries = Gallery::latest()->get();
+        $galleries = Gallery::latest()->get()->map(function ($gallery) {
+            return $this->appendFullImageUrls($gallery);
+        });
 
         return response()->json([
             'status'  => true,

@@ -21,10 +21,10 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'   => 'required|string|max:255',
-            'content' => 'required|string',
-            'status'  => 'required|in:draft,published',
-            'image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'status'       => 'required|in:draft,published',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'top_stories'  => 'nullable|boolean',
         ]);
 
@@ -34,10 +34,14 @@ class BlogController extends Controller
             $data['slug'] = Str::slug($data['title']);
 
             if ($request->hasFile('image')) {
-                $data['image'] = $request->file('image')->store('blogs', 'public');
+                $path = $request->file('image')->store('blogs', 'public');
+                $data['image'] = $path; // store relative path
             }
 
             $blog = Blog::create($data);
+
+            // Return with full image URL
+            $blog->image_url = $blog->image ? asset('storage/' . $blog->image) : null;
 
             return response()->json($blog, 201);
         } catch (\Exception $e) {
@@ -49,41 +53,51 @@ class BlogController extends Controller
         }
     }
 
-    public function show($slug)
-    {
-        $blog = Blog::with('author:id,firstname,lastname')->where('slug', $slug)->firstOrFail();
-        return response()->json($blog);
-    }
-
     public function update(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
 
         $request->validate([
-            'title'   => 'sometimes|string|max:255',
-            'content' => 'sometimes|string',
-            'status'  => 'sometimes|in:draft,published',
-            'image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'title'        => 'sometimes|string|max:255',
+            'content'      => 'sometimes|string',
+            'status'       => 'sometimes|in:draft,published',
+            'image'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'top_stories'  => 'nullable|boolean',
         ]);
 
-        $data = $request->only(['title', 'content', 'status', 'top_stories']);
+        try {
+            $data = $request->only(['title', 'content', 'status', 'top_stories']);
 
-        if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($blog->image) {
-                Storage::disk('public')->delete($blog->image);
+            if ($request->hasFile('image')) {
+                // Delete old image
+                if ($blog->image && Storage::disk('public')->exists($blog->image)) {
+                    Storage::disk('public')->delete($blog->image);
+                }
+                $path = $request->file('image')->store('blogs', 'public');
+                $data['image'] = $path;
             }
-            $validated['image'] = $request->file('image')->store('blogs', 'public');
+
+            if (isset($data['title'])) {
+                $data['slug'] = Str::slug($data['title']);
+            }
+
+            $blog->update($data);
+
+            // Return with full image URL
+            $blog->image_url = $blog->image ? asset('storage/' . $blog->image) : null;
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Blog updated successfully',
+                'data'    => $blog
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Failed to update blog',
+                'error'   => $e->getMessage()
+            ], 500);
         }
-
-        if (isset($data['title'])) {
-            $data['slug'] = Str::slug($data['title']);
-        }
-
-        $blog->update($data);
-
-        return response()->json($blog);
     }
 
     public function destroy($id)

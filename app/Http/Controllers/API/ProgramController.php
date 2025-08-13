@@ -24,7 +24,6 @@ class ProgramController extends Controller
     // save new programs
     public function store(Request $request)
     {
-        // Validate first (Laravel will automatically return 422 on failure)
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
@@ -40,13 +39,14 @@ class ProgramController extends Controller
         ]);
 
         try {
-            // Handle image upload if present
             if ($request->hasFile('image')) {
                 $validated['image'] = $request->file('image')->store('programs', 'public');
             }
 
-            // Create program
             $program = Program::create($validated);
+
+            // Ensure image_url is loaded
+            $program->refresh();
 
             return response()->json([
                 'status' => true,
@@ -61,7 +61,7 @@ class ProgramController extends Controller
             ], 500);
         }
     }
-    // update program detail
+
     public function update(Request $request, $slug)
     {
         $program = Program::where('slug', $slug)->firstOrFail();
@@ -79,13 +79,16 @@ class ProgramController extends Controller
             'course_content' => 'nullable|string',
             'learning_experience' => 'nullable|string',
         ]);
-// dd($validated);
+
         try {
             if ($request->hasFile('image')) {
                 $validated['image'] = $request->file('image')->store('programs', 'public');
             }
 
             $program->update($validated);
+
+            // Ensure image_url is loaded
+            $program->refresh();
 
             return response()->json([
                 'status' => true,
@@ -100,6 +103,7 @@ class ProgramController extends Controller
             ], 500);
         }
     }
+
 
     public function destroy($slug)
     {

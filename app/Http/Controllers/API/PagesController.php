@@ -38,28 +38,30 @@ class PagesController extends Controller
             $page = Page::firstOrNew(['parent_page' => $request->parent_page]);
 
             // Update text fields
-            $page->header_title = $request->header_title;
-            $page->header_description = $request->header_description;
-            $page->title_1 = $request->title_1;
-            $page->content_1 = $request->content_1;
-            $page->title_2 = $request->title_2;
-            $page->content_2 = $request->content_2;
-            $page->title_3 = $request->title_3;
-            $page->content_3 = $request->content_3;
-            $page->title_1 = $request->title_1;
-            $page->content_1 = $request->content_1;
-            $page->green_title = $request->green_title;
-            $page->green_description = $request->green_description;
-            $page->footer_title = $request->footer_title;
-            $page->footer_contact = $request->footer_contact;
-            $page->footer_description = $request->footer_description;
+            $page->fill($request->only([
+                'header_title',
+                'header_description',
+                'title_1',
+                'content_1',
+                'title_2',
+                'content_2',
+                'title_3',
+                'content_3',
+                'title_4',
+                'content_4',
+                'green_title',
+                'green_description',
+                'footer_title',
+                'footer_contact',
+                'footer_description'
+            ]));
 
-
-            // Upload image
+            // Upload single content images
             foreach ([1, 2, 3, 4] as $i) {
                 $field = "content_{$i}_image";
                 if ($request->hasFile($field)) {
-                    $page->$field = $request->file($field)->store('content_images', 'public');
+                    $path = $request->file($field)->store('content_images', 'public');
+                    $page->$field = $path;
                 }
             }
 
@@ -73,6 +75,21 @@ class PagesController extends Controller
             }
 
             $page->save();
+
+            // Transform to full URLs before returning
+            foreach ([1, 2, 3, 4] as $i) {
+                $field = "content_{$i}_image";
+                if ($page->$field) {
+                    $page->$field = asset('storage/' . $page->$field);
+                }
+            }
+
+            if ($page->sliders) {
+                $sliders = json_decode($page->sliders, true);
+                $page->sliders = array_map(function ($path) {
+                    return asset('storage/' . $path);
+                }, $sliders);
+            }
 
             return response()->json([
                 'status' => true,
@@ -88,28 +105,36 @@ class PagesController extends Controller
         }
     }
 
-    public function showByParent($parent_page)
+
+    public function showByParent($parentPage)
     {
-        try {
-            $page = Page::where('parent_page', $parent_page)->first();
+        $page = Page::where('parent_page', $parentPage)->first();
 
-            if (!$page) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Page not found'
-                ], 404);
-            }
-
-            return response()->json([
-                'status' => true,
-                'data' => $page
-            ]);
-        } catch (\Exception $e) {
+        if (!$page) {
             return response()->json([
                 'status' => false,
-                'message' => 'An error occurred while fetching the page.',
-                'error' => $e->getMessage()
-            ], 500);
+                'message' => 'Page not found'
+            ], 404);
         }
+
+        // Convert image paths to full URLs
+        foreach ([1, 2, 3, 4] as $i) {
+            $field = "content_{$i}_image";
+            if ($page->$field) {
+                $page->$field = asset('storage/' . $page->$field);
+            }
+        }
+
+        if ($page->sliders) {
+            $sliders = json_decode($page->sliders, true);
+            $page->sliders = array_map(function ($path) {
+                return asset('storage/' . $path);
+            }, $sliders);
+        }
+
+        return response()->json([
+            'status' => true,
+            'data' => $page
+        ]);
     }
 }
