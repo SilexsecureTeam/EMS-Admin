@@ -40,7 +40,8 @@ class CareerController extends Controller
             ]);
 
             if ($request->hasFile('image')) {
-                $validated['image'] = $request->file('image')->store('careers', 'public');
+                $path = $request->file('image')->store('careers', 'public');
+                $validated['image'] = asset('storage/' . $path); // full public URL
             }
 
             // Find the first career record
