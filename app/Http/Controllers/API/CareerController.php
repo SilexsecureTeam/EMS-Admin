@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Career;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CareerController extends Controller
 {
@@ -35,12 +36,21 @@ class CareerController extends Controller
                 'content'          => 'required|string',
                 'placement_header' => 'nullable|string|max:255',
                 'email'            => 'required|email|max:255',
+                'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // image validation
             ]);
+
+            if ($request->hasFile('image')) {
+                $validated['image'] = $request->file('image')->store('careers', 'public');
+            }
 
             // Find the first career record
             $career = Career::first();
 
             if ($career) {
+                if ($request->hasFile('image') && $career->image) {
+                    Storage::disk('public')->delete($career->image);
+                }
+
                 $career->update($validated);
                 $message = 'Career post updated successfully.';
             } else {
