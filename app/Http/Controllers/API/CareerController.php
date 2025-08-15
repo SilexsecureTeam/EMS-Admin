@@ -24,7 +24,16 @@ class CareerController extends Controller
         return response()->json([
             'status'  => true,
             'message' => 'Career post retrieved successfully.',
-            'data'    => $career
+            'data'    => [
+                'id'               => $career->id,
+                'title'            => $career->title,
+                'content'          => $career->content, // HTML preserved
+                'placement_header' => $career->placement_header,
+                'email'            => $career->email,
+                'image'            => $career->image ? asset('storage/' . $career->image) : null,
+                'created_at'       => $career->created_at,
+                'updated_at'       => $career->updated_at,
+            ]
         ], 200);
     }
 
@@ -33,18 +42,17 @@ class CareerController extends Controller
         try {
             $validated = $request->validate([
                 'title'            => 'required|string|max:255',
-                'content'          => 'required|string',
+                'content'          => 'required|string', // allow HTML here
                 'placement_header' => 'nullable|string|max:255',
                 'email'            => 'required|email|max:255',
-                'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // image validation
+                'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('careers', 'public');
-                $validated['image'] = asset('storage/' . $path); // full public URL
+                $validated['image'] = $path; // store relative path in DB
             }
 
-            // Find the first career record
             $career = Career::first();
 
             if ($career) {
@@ -73,12 +81,4 @@ class CareerController extends Controller
             ], 500);
         }
     }
-
-    // public function destroy($id)
-    // {
-    //     $career = Career::findOrFail($id);
-    //     $career->delete();
-
-    //     return response()->json(['message' => 'Career post deleted successfully']);
-    // }
 }

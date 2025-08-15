@@ -15,15 +15,40 @@ class ProgramController extends Controller
     }
 
     // shows individual programs
+
     public function show($slug)
     {
-        $program = Program::with('reviews')->where('slug', $slug)->firstOrFail();
-        return response()->json($program);
+        $program = Program::with('reviews')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Program fetched successfully.',
+            'data' => [
+                'id' => $program->id,
+                'title' => $program->title,
+                'slug' => $program->slug,
+                'image' => $program->image ? asset('storage/' . $program->image) : null,
+                'content' => $program->content, // keep HTML intact
+                'description' => $program->description, // keep HTML intact
+                'learning_outcomes' => $program->learning_outcomes,
+                'course_fee' => $program->course_fee,
+                'target_audience' => $program->target_audience,
+                'entry_requirement' => $program->entry_requirement,
+                'curriculum' => $program->curriculum,
+                'course_content' => $program->course_content,
+                'learning_experience' => $program->learning_experience,
+                'reviews' => $program->reviews
+            ]
+        ], 200);
     }
+
 
     // save new programs
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'nullable|string',
