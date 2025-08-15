@@ -53,6 +53,19 @@ class BlogController extends Controller
         }
     }
 
+    public function show($slug)
+    {
+        $blog = Blog::with('author:id,firstname,lastname,email')
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        // Append full image URL
+        $blog->image_url = $blog->image ? asset('storage/' . $blog->image) : null;
+
+        return response()->json($blog);
+    }
+
+
     public function update(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
