@@ -23,8 +23,12 @@ class Program extends Model
     ];
 
     protected $casts = [
+        'course_content' => 'array',
+        'entry_requirement' => 'array',
+        'learning_experience' => 'array',
         'learning_outcomes' => 'array',
         'curriculum' => 'array',
+        'course_fee' => 'decimal:2',
     ];
 
     protected static function boot()

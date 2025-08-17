@@ -28,6 +28,7 @@ class CareerController extends Controller
                 'id'               => $career->id,
                 'title'            => $career->title,
                 'content'          => $career->content, // HTML preserved
+                'sub_content'      => $career->sub_content,
                 'placement_header' => $career->placement_header,
                 'email'            => $career->email,
                 'image'            => $career->image ? asset('storage/' . $career->image) : null,
@@ -43,6 +44,8 @@ class CareerController extends Controller
             $validated = $request->validate([
                 'title'            => 'required|string|max:255',
                 'content'          => 'required|string', // allow HTML here
+                'sub_content'      => 'required|array',
+                'sub_content.*'    => 'string',
                 'placement_header' => 'nullable|string|max:255',
                 'email'            => 'required|email|max:255',
                 'image'            => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',

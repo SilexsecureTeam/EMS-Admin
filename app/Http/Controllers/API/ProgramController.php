@@ -30,10 +30,12 @@ class ProgramController extends Controller
                 'title' => $program->title,
                 'slug' => $program->slug,
                 'image' => $program->image ? asset('storage/' . $program->image) : null,
-                'content' => $program->content, // keep HTML intact
-                'description' => $program->description, // keep HTML intact
+                'content' => $program->content, 
+                'description' => $program->description, 
                 'learning_outcomes' => $program->learning_outcomes,
-                'course_fee' => $program->course_fee,
+                'course_fee' => $program->course_fee
+                    ? number_format($program->course_fee, 2)
+                    : null,
                 'target_audience' => $program->target_audience,
                 'entry_requirement' => $program->entry_requirement,
                 'curriculum' => $program->curriculum,
@@ -55,12 +57,12 @@ class ProgramController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image',
             'learning_outcomes' => 'nullable|array',
-            'course_fee' => 'nullable|string',
+            'course_fee' => 'nullable|decimal:0,2',
             'target_audience' => 'nullable|string',
-            'entry_requirement' => 'nullable|string',
+            'entry_requirement' => 'nullable|array',
             'curriculum' => 'nullable|array',
-            'course_content' => 'nullable|string',
-            'learning_experience' => 'nullable|string',
+            'course_content' => 'nullable|array',
+            'learning_experience' => 'nullable|array',
         ]);
 
         try {
@@ -81,8 +83,8 @@ class ProgramController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'An unexpected error occurred.',
-                'error' => $e->getMessage()
+                'message' => 'The slug has already been created. Please choose another title and another parent_page.',
+                // 'error' => $e->getMessage()
             ], 500);
         }
     }
@@ -97,12 +99,12 @@ class ProgramController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image',
             'learning_outcomes' => 'nullable|array',
-            'course_fee' => 'nullable|string',
+            'course_fee' => 'nullable|decimal:0,2',
             'target_audience' => 'nullable|string',
-            'entry_requirement' => 'nullable|string',
+            'entry_requirement' => 'nullable|array',
             'curriculum' => 'nullable|array',
-            'course_content' => 'nullable|string',
-            'learning_experience' => 'nullable|string',
+            'course_content' => 'nullable|array',
+            'learning_experience' => 'nullable|array',
         ]);
 
         try {

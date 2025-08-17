@@ -16,15 +16,15 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
-            $table->text('content')->nullable(); // Main program body text
+            $table->text('content')->nullable();
             $table->text('description')->nullable();
             $table->json('learning_outcomes')->nullable();
-            $table->string('course_fee')->nullable(); // Changed from cost_plan
+            $table->decimal('course_fee', 15, 2)->nullable();
             $table->text('target_audience')->nullable();
-            $table->text('entry_requirement')->nullable(); // Plain text now
-            $table->json('curriculum')->nullable(); // Array of {title, content}
-            $table->text('course_content')->nullable(); // For card section
-            $table->string('learning_experience')->nullable();
+            $table->json('entry_requirement')->nullable();
+            $table->json('curriculum')->nullable(); 
+            $table->json('course_content')->nullable();
+            $table->json('learning_experience')->nullable();
             $table->timestamps();
         });
     }

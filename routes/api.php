@@ -59,6 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/contact', [ContactController::class, 'index']);
 });
 
+// pages
+    Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
+
 // programs
 Route::prefix('programs')->group(function () {
     Route::get('/', [ProgramController::class, 'index']);
