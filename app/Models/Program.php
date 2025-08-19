@@ -29,6 +29,7 @@ class Program extends Model
         'learning_outcomes' => 'array',
         'curriculum' => 'array',
         'course_fee' => 'decimal:2',
+        'content' => 'array'
     ];
 
     protected static function boot()

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->string('image')->nullable();
-            $table->text('content')->nullable();
+            $table->json('content')->nullable();
             $table->text('description')->nullable();
             $table->json('learning_outcomes')->nullable();
             $table->decimal('course_fee', 15, 2)->nullable();

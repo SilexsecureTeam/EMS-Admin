@@ -53,7 +53,7 @@ class ProgramController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'content' => 'nullable|string',
+            'content' => 'nullable|array',
             'description' => 'nullable|string',
             'image' => 'nullable|image',
             'learning_outcomes' => 'nullable|array',
@@ -95,7 +95,7 @@ class ProgramController extends Controller
 
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
-            'content' => 'nullable|string',
+            'content' => 'nullable|array',
             'description' => 'nullable|string',
             'image' => 'nullable|image',
             'learning_outcomes' => 'nullable|array',
