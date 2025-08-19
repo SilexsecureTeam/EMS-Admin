@@ -152,4 +152,14 @@ class PagesController extends Controller
             'data' => $page
         ]);
     }
+
+    public function destroyByParent($parent_page)
+    {
+        $page = Page::where('parent_page', $parent_page)->firstOrFail();
+        $page->delete();
+
+        return response()->json([
+            'message' => 'Page with parent_page "' . $parent_page . '" deleted successfully.'
+        ]);
+    }
 }

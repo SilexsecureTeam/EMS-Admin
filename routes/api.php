@@ -32,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout']);
     Route::post('/page/update', [PagesController::class, 'storeOrUpdate']);
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
+    Route::delete('/page/{parent_page}', [PagesController::class, 'destroyByParent']);
+
     // programs
     Route::get('/programs', [ProgramController::class, 'index']);
     Route::get('/programs/{slug}', [ProgramController::class, 'show']);
