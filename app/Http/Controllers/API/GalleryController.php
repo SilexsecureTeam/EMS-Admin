@@ -5,20 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Gallery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
-    protected function appendFullImageUrls($gallery)
-    {
-        foreach (['image1', 'image2', 'image3'] as $imageField) {
-            $gallery->$imageField = $gallery->$imageField
-                ? asset('storage/' . $gallery->$imageField)
-                : null;
-        }
-        return $gallery;
-    }
-
     public function store(Request $request)
     {
         try {
@@ -33,7 +24,6 @@ class GalleryController extends Controller
 
             $data = $validated;
 
-            // Upload images if present
             foreach (['image1', 'image2', 'image3'] as $imageField) {
                 if ($request->hasFile($imageField)) {
                     $data[$imageField] = $request->file($imageField)->store('gallery', 'public');
@@ -41,9 +31,6 @@ class GalleryController extends Controller
             }
 
             $gallery = Gallery::create($data);
-
-            // Append full URLs
-            $gallery = $this->appendFullImageUrls($gallery);
 
             return response()->json([
                 'status'  => true,
@@ -61,6 +48,7 @@ class GalleryController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::debug('updatedebug', ['request' => $request]);
         try {
             $gallery = Gallery::findOrFail($id);
 
@@ -68,9 +56,9 @@ class GalleryController extends Controller
                 'gallery_header' => 'sometimes|string|max:255',
                 'sub_header'     => 'nullable|string|max:255',
                 'title'          => 'sometimes|string|max:255',
-                'image1'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-                'image2'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-                'image3'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image1'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'image2'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'image3'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
             $data = $validated;
@@ -88,9 +76,6 @@ class GalleryController extends Controller
 
             $gallery->update($data);
 
-            // Append full URLs
-            $gallery = $this->appendFullImageUrls($gallery);
-
             return response()->json([
                 'status'  => true,
                 'message' => 'Gallery item updated successfully.',
@@ -107,14 +92,31 @@ class GalleryController extends Controller
 
     public function index()
     {
-        $galleries = Gallery::latest()->get()->map(function ($gallery) {
-            return $this->appendFullImageUrls($gallery);
-        });
+        $galleries = Gallery::latest()->get();
 
         return response()->json([
             'status'  => true,
             'message' => 'Gallery list retrieved successfully.',
             'data'    => $galleries
         ]);
+    }
+
+    public function show($id)
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Gallery item retrieved successfully.',
+                'data'    => $gallery
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gallery item not found.',
+                'error'   => $e->getMessage()
+            ], 404);
+        }
     }
 }

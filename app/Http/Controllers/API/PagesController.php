@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PagesController extends Controller
 {
@@ -13,21 +14,21 @@ class PagesController extends Controller
         try {
             $request->validate([
                 'parent_page' => 'required|string',
-                'sliders.*' => 'nullable|image',
+                'sliders' => 'nullable|array',
                 'header_title' => 'nullable|string',
                 'header_description' => 'nullable|string',
                 'title_1' => 'nullable|string',
                 'content_1' => 'nullable|string',
-                'content_1_image' => 'nullable|image',
+                'content_1_image' => 'nullable|string',
                 'title_2' => 'nullable|string',
                 'content_2' => 'nullable|string',
-                'content_2_image' => 'nullable|image',
+                'content_2_image' => 'nullable|string',
                 'title_3' => 'nullable|string',
                 'content_3' => 'nullable|string',
-                'content_3_image' => 'nullable|image',
+                'content_3_image' => 'nullable|string',
                 'title_4' => 'nullable|string',
                 'content_4' => 'nullable|string',
-                'content_4_image' => 'nullable|image',
+                'content_4_image' => 'nullable|string',
                 'green_title' => 'nullable|string',
                 'green_description' => 'nullable|string',
                 'footer_title' => 'nullable|string',
@@ -56,27 +57,42 @@ class PagesController extends Controller
                 'footer_description'
             ]));
 
-            // Upload single content images
+            // Handle content images (base64)
             foreach ([1, 2, 3, 4] as $i) {
                 $field = "content_{$i}_image";
-                if ($request->hasFile($field)) {
-                    $path = $request->file($field)->store('content_images', 'public');
-                    $page->$field = $path;
+                if ($request->$field && preg_match('/^data:image/', $request->$field)) {
+                    preg_match('/^data:image\/(\w+);base64,/', $request->$field, $matches);
+                    $extension = $matches[1] ?? 'png';
+
+                    $image = preg_replace('#^data:image/\w+;base64,#i', '', $request->$field);
+                    $fileName = "content_images/" . uniqid() . '.' . $extension;
+
+                    Storage::disk('public')->put($fileName, base64_decode($image));
+                    $page->$field = $fileName;
                 }
             }
 
-            // Upload multiple sliders
-            if ($request->hasFile('sliders')) {
+            // Handle sliders (array of base64 images)
+            if ($request->sliders && is_array($request->sliders)) {
                 $sliderPaths = [];
-                foreach ($request->file('sliders') as $slider) {
-                    $sliderPaths[] = $slider->store('sliders', 'public');
+                foreach ($request->sliders as $slider) {
+                    if (is_string($slider) && preg_match('/^data:image/', $slider)) {
+                        preg_match('/^data:image\/(\w+);base64,/', $slider, $matches);
+                        $extension = $matches[1] ?? 'png';
+
+                        $image = preg_replace('#^data:image/\w+;base64,#i', '', $slider);
+                        $fileName = "sliders/" . uniqid() . '.' . $extension;
+
+                        Storage::disk('public')->put($fileName, base64_decode($image));
+                        $sliderPaths[] = $fileName;
+                    }
                 }
                 $page->sliders = json_encode($sliderPaths);
             }
 
             $page->save();
 
-            // Transform to full URLs before returning
+            // Convert paths to full URLs for API response
             foreach ([1, 2, 3, 4] as $i) {
                 $field = "content_{$i}_image";
                 if ($page->$field) {
@@ -104,7 +120,6 @@ class PagesController extends Controller
             ], 500);
         }
     }
-
 
     public function showByParent($parentPage)
     {
