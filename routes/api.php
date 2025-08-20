@@ -38,13 +38,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/programs', [ProgramController::class, 'index']);
     Route::get('/programs/{slug}', [ProgramController::class, 'show']);
     Route::post('/programs', [ProgramController::class, 'store']);
-    Route::put('/programs/{slug}', [ProgramController::class, 'update']);
+    Route::patch('/programs/{slug}', [ProgramController::class, 'update']);
     Route::delete('/programs/{slug}', [ProgramController::class, 'destroy']);
     // blog
     Route::get('blogs', [BlogController::class, 'index']);
     Route::post('blogs', [BlogController::class, 'store']);
     Route::get('blogs/{slug}', [BlogController::class, 'show']);
-    Route::put('blogs/{id}', [BlogController::class, 'update']);
+    Route::patch('blogs/{id}', [BlogController::class, 'update']);
     Route::delete('blogs/{id}', [BlogController::class, 'destroy']);
     // career
     Route::get('careers', [CareerController::class, 'index']);

@@ -43,7 +43,7 @@ class CareerController extends Controller
         try {
             $validated = $request->validate([
                 'title'            => 'required|string|max:255',
-                'content'          => 'required|string', // allow HTML here
+                'content'          => 'required|string', 
                 'sub_content'      => 'required|array',
                 'sub_content.*'    => 'string',
                 'placement_header' => 'nullable|string|max:255',
