@@ -53,7 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Gallery
     Route::get('gallery', [GalleryController::class, 'index']);
     Route::post('gallery', [GalleryController::class, 'store']);
-    Route::put('gallery/{id}', [GalleryController::class, 'update']);
+    Route::patch('gallery/{id}', [GalleryController::class, 'update']);
     // enrol now
     Route::get('/enrol-now', [EnrolNowController::class, 'show']);
     Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);
