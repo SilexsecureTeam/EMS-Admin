@@ -99,7 +99,7 @@ class PagesController extends Controller
         return response()->json([
             'status' => false,
             'message' => 'An error occurred while saving the page.',
-            'error' => $e->getMessage()
+            // 'error' => $e->getMessage()
         ], 500);
     }
 }

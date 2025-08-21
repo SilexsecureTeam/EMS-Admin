@@ -79,7 +79,7 @@ class CareerController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'An error occurred while saving the career post.',
-                'error'   => $e->getMessage(),
+                // 'error'   => $e->getMessage(),
                 'data'    => null
             ], 500);
         }

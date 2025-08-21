@@ -108,7 +108,7 @@ class BlogController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Failed to update blog',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 500);
         }
     }

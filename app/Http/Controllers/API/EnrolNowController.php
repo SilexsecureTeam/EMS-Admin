@@ -49,7 +49,7 @@ class EnrolNowController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Failed to save data',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 500);
         }
     }
@@ -71,7 +71,7 @@ class EnrolNowController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Error downloading file',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 500);
         }
     }

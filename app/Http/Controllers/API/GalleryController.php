@@ -41,7 +41,7 @@ class GalleryController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'An error occurred while creating the gallery item.',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 500);
         }
     }
@@ -85,7 +85,7 @@ class GalleryController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'An error occurred while updating the gallery item.',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 500);
         }
     }
@@ -115,7 +115,7 @@ class GalleryController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'Gallery item not found.',
-                'error'   => $e->getMessage()
+                // 'error'   => $e->getMessage()
             ], 404);
         }
     }
@@ -142,7 +142,7 @@ class GalleryController extends Controller
         return response()->json([
             'status'  => false,
             'message' => 'An error occurred while deleting the gallery item.',
-            'error'   => $e->getMessage()
+            // 'error'   => $e->getMessage()
         ], 500);
     }
 }

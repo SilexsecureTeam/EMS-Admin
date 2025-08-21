@@ -11,6 +11,7 @@ use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
 use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
+use App\Http\Controllers\API\StaffHireController;
 
 use function Pest\Laravel\json;
 // Route::get('/ping', fn() => response()->json([
@@ -60,10 +61,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);
     // contact
     Route::get('/contact', [ContactController::class, 'index']);
+    // staffhire
+    Route::get('/staff-hires', [StaffHireController::class, 'index']);   // list all
+    Route::get('/staff-hires/{id}', [StaffHireController::class, 'show']); // single
+    Route::delete('/staff-hires/{id}', [StaffHireController::class, 'destroy']); // delete
 });
 
 // pages
-    Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
+Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
 
 // programs
 Route::prefix('programs')->group(function () {
@@ -89,3 +94,5 @@ Route::get('gallery', [GalleryController::class, 'index']);
 // contact
 Route::post('/contact', [ContactController::class, 'store']);
 
+// staff hire
+Route::post('/staff-hires', [StaffHireController::class, 'store']);

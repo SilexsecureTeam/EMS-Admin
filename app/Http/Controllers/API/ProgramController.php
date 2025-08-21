@@ -138,7 +138,7 @@ class ProgramController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'An unexpected error occurred while updating the program.',
-                'error' => $e->getMessage()
+                // 'error' => $e->getMessage()
             ], 500);
         }
     }
