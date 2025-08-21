@@ -119,4 +119,32 @@ class GalleryController extends Controller
             ], 404);
         }
     }
+
+    public function destroy($id)
+{
+    try {
+        $gallery = Gallery::findOrFail($id);
+
+        // Delete stored images if they exist
+        foreach (['image1', 'image2', 'image3'] as $field) {
+            if ($gallery->$field && Storage::disk('public')->exists($gallery->$field)) {
+                Storage::disk('public')->delete($gallery->$field);
+            }
+        }
+
+        $gallery->delete();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Gallery item deleted successfully.'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status'  => false,
+            'message' => 'An error occurred while deleting the gallery item.',
+            'error'   => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

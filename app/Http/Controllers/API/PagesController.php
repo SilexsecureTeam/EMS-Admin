@@ -107,36 +107,37 @@ class PagesController extends Controller
 
 
     public function showByParent($parentPage)
-    {
-        $page = Page::where('parent_page', $parentPage)->first();
+{
+    $page = Page::where('parent_page', $parentPage)->first();
 
-        if (!$page) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Page not found'
-            ], 404);
-        }
-
-        // Convert image paths to full URLs
-        foreach ([1, 2, 3, 4] as $i) {
-            $field = "content_{$i}_image";
-            if ($page->$field) {
-                $page->$field = asset('storage/' . $page->$field);
-            }
-        }
-
-        if ($page->sliders) {
-            $sliders = json_decode($page->sliders, true);
-            $page->sliders = array_map(function ($path) {
-                return asset('storage/' . $path);
-            }, $sliders);
-        }
-
+    if (!$page) {
         return response()->json([
-            'status' => true,
-            'data' => $page
-        ]);
+            'status' => false,
+            'message' => 'Page not found'
+        ], 404);
     }
+
+    // Convert content images to full URLs
+    foreach ([1, 2, 3, 4] as $i) {
+        $field = "content_{$i}_image";
+        if ($page->$field) {
+            $page->$field = asset('storage/' . $page->$field);
+        }
+    }
+
+    // Convert sliders to full URLs
+    if (!empty($page->sliders) && is_array($page->sliders)) {
+        $page->sliders = array_map(function ($path) {
+            return asset('storage/' . $path);
+        }, $page->sliders);
+    }
+
+    return response()->json([
+        'status' => true,
+        'data' => $page
+    ]);
+}
+
 
     public function destroyByParent($parent_page)
     {
