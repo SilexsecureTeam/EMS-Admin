@@ -19,7 +19,11 @@ class Program extends Model
         'entry_requirement',
         'curriculum',
         'course_content',
-        'learning_experience'
+        'learning_experience',
+        'news', 
+        'training_days', 
+        'start_date', 
+        'end_date'
     ];
 
     protected $casts = [
@@ -29,7 +33,11 @@ class Program extends Model
         'learning_outcomes' => 'array',
         'curriculum' => 'array',
         'course_fee' => 'decimal:2',
-        'content' => 'array'
+        'content' => 'array',
+        'news' => 'boolean',
+        'training_days' => 'integer',
+        'start_date' => 'date',
+        'end_date' => 'date'
     ];
 
     protected static function boot()

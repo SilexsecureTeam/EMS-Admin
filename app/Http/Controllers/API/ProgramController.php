@@ -30,8 +30,8 @@ class ProgramController extends Controller
                 'title' => $program->title,
                 'slug' => $program->slug,
                 'image' => $program->image ? asset('storage/' . $program->image) : null,
-                'content' => $program->content, 
-                'description' => $program->description, 
+                'content' => $program->content,
+                'description' => $program->description,
                 'learning_outcomes' => $program->learning_outcomes,
                 'course_fee' => $program->course_fee
                     ? number_format($program->course_fee, 2)
@@ -41,6 +41,10 @@ class ProgramController extends Controller
                 'curriculum' => $program->curriculum,
                 'course_content' => $program->course_content,
                 'learning_experience' => $program->learning_experience,
+                'news' => $program->news,
+                'training_days' => $program->training_days,
+                'start_date' => $program->start_date ? $program->start_date->toDateString() : null,
+                'end_date' => $program->end_date ? $program->end_date->toDateString() : null,
                 'reviews' => $program->reviews
             ]
         ], 200);
@@ -63,6 +67,10 @@ class ProgramController extends Controller
             'curriculum' => 'nullable|array',
             'course_content' => 'nullable|array',
             'learning_experience' => 'nullable|array',
+            'news' => 'boolean',
+            'training_days' => 'nullable|integer|min:1',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
         try {
@@ -105,6 +113,10 @@ class ProgramController extends Controller
             'curriculum' => 'nullable|array',
             'course_content' => 'nullable|array',
             'learning_experience' => 'nullable|array',
+            'news' => 'boolean',
+            'training_days' => 'nullable|integer|min:1',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
 
         try {
