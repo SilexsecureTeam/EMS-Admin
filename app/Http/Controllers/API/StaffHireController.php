@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Mail\StaffHireConfirmation;
+use App\Mail\StaffHireNotification;
 use App\Models\StaffHire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class StaffHireController extends Controller
 {
@@ -17,16 +20,20 @@ class StaffHireController extends Controller
             'email'               => 'required|email|max:255',
             'phone'               => 'required|string|max:20',
             'staff_category'      => 'required|string|max:255',
-            'years_of_experience' => 'required|integer|min:0',
+            'years_of_experience' => 'nullable|integer|min:0',
             'address'             => 'required|string|max:255',
             'city'                => 'required|string|max:255',
             'country'             => 'required|string|max:255',
-            'zip_code'            => 'required|string|max:20',
+            'zip_code'            => 'nullable|string|max:20',
             'interest_reason'     => 'required|string',
         ]);
 
         $staffHire = StaffHire::create($validated);
 
+         Mail::to('admin@example.com')->send(new StaffHireNotification($staffHire));
+
+         Mail::to($staffHire->email)->send(new StaffHireConfirmation($staffHire));
+         
         return response()->json([
             'status'  => true,
             'message' => 'Application submitted successfully!',

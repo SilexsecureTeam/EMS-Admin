@@ -55,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gallery', [GalleryController::class, 'index']);
     Route::post('gallery', [GalleryController::class, 'store']);
     Route::patch('gallery/{id}', [GalleryController::class, 'update']);
-    Route::delete('gallery/{id}', [GalleryController::class, 'delete']);
+    Route::delete('gallery/{id}', [GalleryController::class, 'destroy']);
     // enrol now
     Route::get('/enrol-now', [EnrolNowController::class, 'show']);
     Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);

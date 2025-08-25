@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->string('staff_category');
-            $table->integer('years_of_experience');
+            $table->integer('years_of_experience')->nullable();
             $table->string('address');
             $table->string('city');
             $table->string('country');
-            $table->string('zip_code');
+            $table->string('zip_code')->nullable();
             $table->text('interest_reason');
             $table->timestamps();
         });
