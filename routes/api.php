@@ -31,6 +31,7 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/logout', [LoginController::class, 'logout']);
+    Route::get('/pages', [PagesController::class, 'index']);
     Route::post('/page/update', [PagesController::class, 'storeOrUpdate']);
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
     Route::delete('/page/{parent_page}', [PagesController::class, 'destroyByParent']);
