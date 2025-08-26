@@ -50,4 +50,40 @@ class RegisterController extends Controller
             ], 500);
         }
     }
+
+   public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'     => 'sometimes|string|max:255',
+            'email'    => 'sometimes|email|unique:users,email,' . $user->id,
+            'role'     => 'sometimes|string|in:user,superadmin',
+            'password' => 'sometimes|string|min:8|confirmed', 
+            // requires password_confirmation field
+        ]);
+
+        // If password exists, hash it before saving
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'User detail updated successfully',
+            'data'    => $user,
+        ]);
+    }
+
+    public function index()
+{
+    $users = User::latest()->get();
+
+    return response()->json([
+        'status' => true,
+        'data'   => $users,
+    ]);
+}
 }

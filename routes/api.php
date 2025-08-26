@@ -32,6 +32,9 @@ Route::post('/reset-password', [LoginController::class, 'resetPassword']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/logout', [LoginController::class, 'logout']);
+    Route::get('/users', [RegisterController::class, 'index'])->middleware('superadmin');
+    Route::patch('/users/{id}', [RegisterController::class, 'update'])->middleware('superadmin');
+
     Route::get('/pages', [PagesController::class, 'index']);
     Route::post('/page/update', [PagesController::class, 'storeOrUpdate']);
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
@@ -52,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('blogs', [BlogController::class, 'store']);
     Route::get('blogs/{slug}', [BlogController::class, 'show']);
     Route::patch('blogs/{id}', [BlogController::class, 'update']);
-    Route::delete('blogs/{id}', [BlogController::class, 'destroy']);
+    Route::delete('blogs/{id}', [BlogController::class, 'destroy'])->middleware('superadmin');
     // career
     Route::get('careers', [CareerController::class, 'index']);
     Route::post('careers', [CareerController::class, 'storeOrUpdate']);
@@ -61,7 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('gallery', [GalleryController::class, 'index']);
     Route::post('gallery', [GalleryController::class, 'store']);
     Route::patch('gallery/{id}', [GalleryController::class, 'update']);
-    Route::delete('gallery/{id}', [GalleryController::class, 'destroy']);
+    Route::delete('gallery/{id}', [GalleryController::class, 'destroy'])->middleware('superadmin');
     // enrol now
     Route::get('/enrol-now', [EnrolNowController::class, 'show']);
     Route::post('/enrol-now', [EnrolNowController::class, 'storeOrUpdate']);
@@ -70,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // staffhire
     Route::get('/staff-hires', [StaffHireController::class, 'index']);   // list all
     Route::get('/staff-hires/{id}', [StaffHireController::class, 'show']); // single
-    Route::delete('/staff-hires/{id}', [StaffHireController::class, 'destroy']); // delete
+    Route::delete('/staff-hires/{id}', [StaffHireController::class, 'destroy'])->middleware('superadmin'); // delete
 });
 
 // pages
