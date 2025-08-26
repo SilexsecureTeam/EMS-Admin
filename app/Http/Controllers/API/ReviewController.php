@@ -71,6 +71,25 @@ class ReviewController extends Controller
         ]);
     }
 
+    public function updateFeatured(Request $request, $id)
+{
+    $request->validate([
+        'featured' => 'required|boolean',
+    ]);
+
+    $review = ProgramReview::findOrFail($id);
+
+    $review->featured = $request->input('featured');
+    $review->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Featured status updated successfully',
+        'data' => $review
+    ]);
+}
+
+
     public function destroy($id)
     {
         $review = ProgramReview::findOrFail($id);

@@ -13,6 +13,7 @@ use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
 use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\StaffHireController;
+use App\Http\Controllers\API\ValueController;
 
 use function Pest\Laravel\json;
 // Route::get('/ping', fn() => response()->json([
@@ -35,11 +36,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users', [RegisterController::class, 'index'])->middleware('superadmin');
     Route::patch('/users/{id}', [RegisterController::class, 'update'])->middleware('superadmin');
 
+    // pages
     Route::get('/pages', [PagesController::class, 'index']);
     Route::post('/page/update', [PagesController::class, 'storeOrUpdate']);
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
     Route::delete('/page/{parent_page}', [PagesController::class, 'destroyByParent']);
 
+    // values
+    Route::get('values', [ValueController::class, 'index']);
+    Route::post('values', [ValueController::class, 'store']);
+    Route::get('values/{value}', [ValueController::class, 'show']);
+    Route::patch('values/{value}', [ValueController::class, 'update']);
+    Route::delete('values/{value}', [ValueController::class, 'destroy'])->middleware('superadmin');
+    
     // programs
     Route::get('/programs', [ProgramController::class, 'index']);
     Route::get('/programs/{slug}', [ProgramController::class, 'show']);
@@ -49,6 +58,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/program-reviews', [ReviewController::class, 'index']);
     Route::delete('/program-reviews/{id}', [ReviewController::class, 'destroy']);
+    Route::patch('/reviews/{id}/featured', [ReviewController::class, 'updateFeatured'])->middleware('superadmin');
+
 
     // blog
     Route::get('blogs', [BlogController::class, 'index']);
