@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CareerController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
+use App\Http\Controllers\API\PageBlockController;
 use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
 use App\Http\Controllers\API\ReviewController;
@@ -42,13 +43,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
     Route::delete('/page/{parent_page}', [PagesController::class, 'destroyByParent']);
 
+    // pageblocks
+    Route::get('page-block', [PageBlockController::class, 'index']);
+    Route::post('page-block', [PageBlockController::class, 'storeOrUpdate']);
+    Route::delete('page-block', [PageBlockController::class, 'destroy']);
+
     // values
     Route::get('values', [ValueController::class, 'index']);
     Route::post('values', [ValueController::class, 'store']);
     Route::get('values/{value}', [ValueController::class, 'show']);
     Route::patch('values/{value}', [ValueController::class, 'update']);
     Route::delete('values/{value}', [ValueController::class, 'destroy'])->middleware('superadmin');
-    
+
     // programs
     Route::get('/programs', [ProgramController::class, 'index']);
     Route::get('/programs/{slug}', [ProgramController::class, 'show']);
