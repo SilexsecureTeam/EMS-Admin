@@ -30,7 +30,7 @@ class StaffHireController extends Controller
 
         $staffHire = StaffHire::create($validated);
 
-         Mail::to('admin@example.com')->send(new StaffHireNotification($staffHire));
+         Mail::to('info@etiquettemanagementschool.com')->send(new StaffHireNotification($staffHire));
 
          Mail::to($staffHire->email)->send(new StaffHireConfirmation($staffHire));
          
