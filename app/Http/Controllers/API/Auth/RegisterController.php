@@ -56,7 +56,9 @@ class RegisterController extends Controller
         $user = User::findOrFail($id);
 
         $validated = $request->validate([
-            'name'     => 'sometimes|string|max:255',
+            'firstname'     => 'sometimes|string|max:255',
+            'lastname'     => 'sometimes|string|max:255',
+            'phone'     => 'sometimes|string',
             'email'    => 'sometimes|email|unique:users,email,' . $user->id,
             'role'     => 'sometimes|string|in:user,superadmin',
             'password' => 'sometimes|string|min:8|confirmed', 
