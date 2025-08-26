@@ -18,8 +18,7 @@ class ProgramController extends Controller
 
     public function show($slug)
     {
-        $program = Program::with('reviews')
-            ->where('slug', $slug)
+        $program = Program::where('slug', $slug)
             ->firstOrFail();
 
         return response()->json([
@@ -45,7 +44,7 @@ class ProgramController extends Controller
                 'training_days' => $program->training_days,
                 'start_date' => $program->start_date ? $program->start_date->toDateString() : null,
                 'end_date' => $program->end_date ? $program->end_date->toDateString() : null,
-                'reviews' => $program->reviews
+                // 'reviews' => $program->reviews
             ]
         ], 200);
     }

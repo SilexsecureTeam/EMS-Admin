@@ -62,8 +62,8 @@ class Program extends Model
         return $this->image ? asset('storage/' . $this->image) : null;
     }
 
-    public function reviews()
-    {
-        return $this->hasMany(ProgramReview::class);
-    }
+    // public function reviews()
+    // {
+    //     return $this->hasMany(ProgramReview::class);
+    // }
 }

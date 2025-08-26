@@ -11,6 +11,7 @@ use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
 use App\Http\Controllers\API\PagesController;
 use App\Http\Controllers\API\ProgramController;
+use App\Http\Controllers\API\ReviewController;
 use App\Http\Controllers\API\StaffHireController;
 
 use function Pest\Laravel\json;
@@ -42,6 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/programs', [ProgramController::class, 'store']);
     Route::patch('/programs/{slug}', [ProgramController::class, 'update']);
     Route::delete('/programs/{slug}', [ProgramController::class, 'destroy']);
+
+    Route::get('/program-reviews', [ReviewController::class, 'index']);
+    Route::delete('/program-reviews/{id}', [ReviewController::class, 'destroy']);
+
     // blog
     Route::get('blogs', [BlogController::class, 'index']);
     Route::post('blogs', [BlogController::class, 'store']);
@@ -76,6 +81,9 @@ Route::prefix('programs')->group(function () {
     Route::get('/', [ProgramController::class, 'index']);
     Route::get('{slug}', [ProgramController::class, 'show']);
 });
+
+// reviews
+Route::post('/program-reviews', [ReviewController::class, 'store']);
 
 // blog
 Route::get('blogs/top-stories', [BlogController::class, 'topStories']);
