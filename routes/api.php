@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\BlogController;
 use App\Http\Controllers\API\CareerController;
+use App\Http\Controllers\API\CompanyInfoController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\EnrolNowController;
 use App\Http\Controllers\API\GalleryController;
@@ -48,6 +49,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('page-block', [PageBlockController::class, 'storeOrUpdate']);
     Route::delete('page-block', [PageBlockController::class, 'destroy']);
 
+    // company info
+    Route::get('/company-info', [CompanyInfoController::class, 'index']);
+    Route::post('/company-info', [CompanyInfoController::class, 'storeOrUpdate']);
+    Route::delete('/company-info', [CompanyInfoController::class, 'destroy']);
     // values
     Route::get('values', [ValueController::class, 'index']);
     Route::post('values', [ValueController::class, 'store']);
@@ -96,11 +101,19 @@ Route::middleware('auth:sanctum')->group(function () {
 // pages
 Route::get('/page/{parent_page}', [PagesController::class, 'showByParent']);
 
+// pageblocks
+Route::get('page-block', [PageBlockController::class, 'index']);
 // programs
 Route::prefix('programs')->group(function () {
     Route::get('/', [ProgramController::class, 'index']);
     Route::get('{slug}', [ProgramController::class, 'show']);
 });
+
+// values
+Route::get('values', [ValueController::class, 'index']);
+
+// company info
+Route::get('/company-info', [CompanyInfoController::class, 'index']);
 
 // reviews
 Route::post('/program-reviews', [ReviewController::class, 'store']);
