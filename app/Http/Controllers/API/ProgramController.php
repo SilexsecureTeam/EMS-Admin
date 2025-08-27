@@ -11,7 +11,7 @@ class ProgramController extends Controller
     // all the programs
     public function index()
     {
-        return response()->json(Program::with('reviews')->get());
+        return response()->json(Program::latest()->get());
     }
 
     // shows individual programs

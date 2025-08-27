@@ -37,7 +37,7 @@ class ReviewController extends Controller
         ]);
     }
 
-	public function indexAdmin()
+    public function indexAdmin()
     {
         $reviews = ProgramReview::latest()->get();
 
@@ -47,7 +47,7 @@ class ReviewController extends Controller
         ]);
     }
 
-	
+
     public function store(Request $request)
     {
         $request->validate([
@@ -81,61 +81,73 @@ class ReviewController extends Controller
             'data' => $review
         ]);
     }
-	
-	public function update(Request $request, ProgramReview $review)
-{
-    $request->validate([
-        'reviewer_name'  => 'sometimes|required|string|max:255',
-        'review'         => 'sometimes|required|string',
-        'rating'         => 'sometimes|required|integer|min:1|max:5',
-        'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    ]);
 
-    $data = $request->only([
-        'reviewer_name',
-        'review',
-        'rating',
-    ]);
+    // public function update(Request $request, ProgramReview $review)
+    // {
+    //     try {
+    //         $request->validate([
+    //             'reviewer_name'  => 'sometimes|required|string|max:255',
+    //             'review'         => 'sometimes|required|string',
+    //             'rating'         => 'sometimes|required|integer|min:1|max:5',
+    //             'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    //             'featured'       => 'sometimes|boolean',
+    //         ]);
 
-    if ($request->hasFile('image')) {
-        // delete old image if exists
-        if ($review->image && \Storage::disk('public')->exists($review->image)) {
-            \Storage::disk('public')->delete($review->image);
-        }
-        $data['image'] = $request->file('image')->store('reviews', 'public');
-    }
+    //         $data = $request->only([
+    //             'reviewer_name',
+    //             'review',
+    //             'rating',
+    //             'featured',
+    //         ]);
 
-    $review->update($data);
+    //         if ($request->hasFile('image')) {
+    //             // delete old image if exists
+    //             if ($review->image && file_exists(public_path('storage/' . $review->image))) {
+    //                 unlink(public_path('storage/' . $review->image));
+    //             }
 
-    if ($review->image) {
-        $review->image = asset('storage/' . $review->image);
-    }
+    //             // save new image
+    //             $data['image'] = $request->file('image')->store('reviews', 'public');
+    //         }
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Review updated successfully',
-        'data' => $review
-    ]);
-}
+    //         $review->update($data);
+
+    //         if ($review->image) {
+    //             $review->image = asset('storage/' . $review->image);
+    //         }
+
+    //         return response()->json([
+    //             'status'  => true,
+    //             'message' => 'Review updated successfully',
+    //             'data'    => $review
+    //         ], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status'  => false,
+    //             'message' => 'Something went wrong: ' . $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
 
 
     public function updateFeatured(Request $request, $id)
-{
-    $request->validate([
-        'featured' => 'required|boolean',
-    ]);
+    {
+        $request->validate([
+            'featured' => 'required|boolean',
+        ]);
 
-    $review = ProgramReview::findOrFail($id);
+        $review = ProgramReview::findOrFail($id);
 
-    $review->featured = $request->input('featured');
-    $review->save();
+        $review->featured = $request->input('featured');
+        $review->save();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Featured status updated successfully',
-        'data' => $review
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Featured status updated successfully',
+            'data' => $review
+        ]);
+    }
 
 
     public function destroy($id)
