@@ -20,13 +20,14 @@ class StaffHireController extends Controller
             'email'               => 'required|email|max:255',
             'phone'               => 'required|string|max:20',
             'staff_category'      => 'required|string|max:255',
-            'years_of_experience' => 'nullable|integer|min:0',
+            'years_of_experience' => 'nullable|integer',
             'address'             => 'required|string|max:255',
             'city'                => 'required|string|max:255',
             'country'             => 'required|string|max:255',
-            'zip_code'            => 'nullable|string|max:20',
+            'zip_code'            => 'nullable|string',
             'interest_reason'     => 'required|string',
         ]);
+        // dd($request);
 
         $staffHire = StaffHire::create($validated);
 

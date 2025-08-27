@@ -37,6 +37,17 @@ class ReviewController extends Controller
         ]);
     }
 
+	public function indexAdmin()
+    {
+        $reviews = ProgramReview::latest()->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $reviews
+        ]);
+    }
+
+	
     public function store(Request $request)
     {
         $request->validate([
@@ -70,6 +81,43 @@ class ReviewController extends Controller
             'data' => $review
         ]);
     }
+	
+	public function update(Request $request, ProgramReview $review)
+{
+    $request->validate([
+        'reviewer_name'  => 'sometimes|required|string|max:255',
+        'review'         => 'sometimes|required|string',
+        'rating'         => 'sometimes|required|integer|min:1|max:5',
+        'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+    ]);
+
+    $data = $request->only([
+        'reviewer_name',
+        'review',
+        'rating',
+    ]);
+
+    if ($request->hasFile('image')) {
+        // delete old image if exists
+        if ($review->image && \Storage::disk('public')->exists($review->image)) {
+            \Storage::disk('public')->delete($review->image);
+        }
+        $data['image'] = $request->file('image')->store('reviews', 'public');
+    }
+
+    $review->update($data);
+
+    if ($review->image) {
+        $review->image = asset('storage/' . $review->image);
+    }
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Review updated successfully',
+        'data' => $review
+    ]);
+}
+
 
     public function updateFeatured(Request $request, $id)
 {
