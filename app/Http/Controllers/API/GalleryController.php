@@ -20,11 +20,20 @@ class GalleryController extends Controller
                 'image1'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'image2'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
                 'image3'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image4'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image5'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image6'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image7'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image8'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image9'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image10'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
             $data = $validated;
 
-            foreach (['image1', 'image2', 'image3'] as $imageField) {
+            // Loop through all image fields dynamically
+            foreach (range(1, 10) as $i) {
+                $imageField = "image{$i}";
                 if ($request->hasFile($imageField)) {
                     $data[$imageField] = $request->file($imageField)->store('gallery', 'public');
                 }
@@ -46,9 +55,9 @@ class GalleryController extends Controller
         }
     }
 
+
     public function update(Request $request, $id)
     {
-        Log::debug('updatedebug', ['request' => $request]);
         try {
             $gallery = Gallery::findOrFail($id);
 
@@ -56,20 +65,28 @@ class GalleryController extends Controller
                 'gallery_header' => 'sometimes|string|max:255',
                 'sub_header'     => 'nullable|string|max:255',
                 'title'          => 'sometimes|string|max:255',
-                'image1'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
-                'image2'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
-                'image3'         => 'required|image|mimes:jpg,jpeg,png|max:2048',
+                'image1'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image2'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image3'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image4'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image5'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image6'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image7'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image8'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image9'         => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                'image10'        => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             ]);
 
             $data = $validated;
 
-            foreach (['image1', 'image2', 'image3'] as $imageField) {
+            foreach (range(1, 10) as $i) {
+                $imageField = "image{$i}";
                 if ($request->hasFile($imageField)) {
-                    // Delete old file if exists
+                    // Delete old file if it exists
                     if ($gallery->$imageField && Storage::disk('public')->exists($gallery->$imageField)) {
                         Storage::disk('public')->delete($gallery->$imageField);
                     }
-                    // Store new file
+                    // Save new file
                     $data[$imageField] = $request->file($imageField)->store('gallery', 'public');
                 }
             }
@@ -85,10 +102,11 @@ class GalleryController extends Controller
             return response()->json([
                 'status'  => false,
                 'message' => 'An error occurred while updating the gallery item.',
-                // 'error'   => $e->getMessage()
+                // 'error' => $e->getMessage()
             ], 500);
         }
     }
+
 
     public function index()
     {
@@ -121,30 +139,29 @@ class GalleryController extends Controller
     }
 
     public function destroy($id)
-{
-    try {
-        $gallery = Gallery::findOrFail($id);
+    {
+        try {
+            $gallery = Gallery::findOrFail($id);
 
-        // Delete stored images if they exist
-        foreach (['image1', 'image2', 'image3'] as $field) {
-            if ($gallery->$field && Storage::disk('public')->exists($gallery->$field)) {
-                Storage::disk('public')->delete($gallery->$field);
+            // Delete stored images if they exist
+            foreach (['image1', 'image2', 'image3'] as $field) {
+                if ($gallery->$field && Storage::disk('public')->exists($gallery->$field)) {
+                    Storage::disk('public')->delete($gallery->$field);
+                }
             }
+
+            $gallery->delete();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Gallery item deleted successfully.'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'An error occurred while deleting the gallery item.',
+                // 'error'   => $e->getMessage()
+            ], 500);
         }
-
-        $gallery->delete();
-
-        return response()->json([
-            'status'  => true,
-            'message' => 'Gallery item deleted successfully.'
-        ], 200);
-    } catch (\Exception $e) {
-        return response()->json([
-            'status'  => false,
-            'message' => 'An error occurred while deleting the gallery item.',
-            // 'error'   => $e->getMessage()
-        ], 500);
     }
-}
-
 }
