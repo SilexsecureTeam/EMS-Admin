@@ -23,7 +23,8 @@ class Gallery extends Model
         'image10',
     ];
 
-    protected $appends = ['image1_url', 'image2_url', 'image3_url'];
+    protected $appends = ['image1_url', 'image2_url', 'image3_url', 'image4_url',
+    'image5_url','image6_url','image7_url','image8_url','image9_url','image10_url'];
 
     public function getImage1UrlAttribute()
     {

@@ -17,22 +17,13 @@ class ValueController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'icon'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'icon'     => 'nullable|string|max:255',
             'title'    => 'required|string|max:255',
             'content'  => 'required|string',
             'featured' => 'boolean',
         ]);
 
-        if ($request->hasFile('icon')) {
-            $data['icon'] = $request->file('icon')->store('values', 'public');
-        }
-
         $value = Value::create($data);
-
-        // Append full URL before returning
-        if ($value->icon) {
-            $value->icon = asset('storage/' . $value->icon);
-        }
 
         return response()->json($value, 201);
     }
@@ -46,26 +37,13 @@ class ValueController extends Controller
     public function update(Request $request, Value $value)
     {
         $data = $request->validate([
-            'icon'     => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'icon'     => 'sometimes|required|string|max:255',
             'title'    => 'sometimes|required|string|max:255',
             'content'  => 'sometimes|required|string',
             'featured' => 'boolean',
         ]);
 
-        if ($request->hasFile('icon')) {
-            // delete old icon
-            if ($value->icon && Storage::disk('public')->exists($value->icon)) {
-                Storage::disk('public')->delete($value->icon);
-            }
-
-            $data['icon'] = $request->file('icon')->store('values', 'public');
-        }
-
         $value->update($data);
-
-        if ($value->icon) {
-            $value->icon = asset('storage/' . $value->icon);
-        }
 
         return response()->json($value);
     }
@@ -75,7 +53,7 @@ class ValueController extends Controller
     {
         $value->delete();
         return response()->json([
-            'message'=> 'deleted successfully',
+            'message' => 'deleted successfully',
         ]);
     }
 }
