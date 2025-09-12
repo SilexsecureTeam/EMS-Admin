@@ -69,7 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/program-reviews', [ReviewController::class, 'store']);
     Route::get('/admin/program-reviews', [ReviewController::class, 'indexAdmin']);
-    // Route::patch('/program-reviews/{review}', [ReviewController::class, 'update']);
+    Route::patch('/program-reviews/{review}', [ReviewController::class, 'update']);
     Route::patch('/reviews/{id}/featured', [ReviewController::class, 'updateFeatured'])->middleware('superadmin');
     Route::delete('/program-reviews/{id}', [ReviewController::class, 'destroy'])->middleware('superadmin');
 
@@ -120,6 +120,8 @@ Route::get('/company-info', [CompanyInfoController::class, 'index']);
 // reviews
 Route::get('/program-reviews', [ReviewController::class, 'index']);
 Route::post('/program-reviews', [ReviewController::class, 'store']);
+Route::patch('/program-reviews/{review}', [ReviewController::class, 'update']);
+
 
 // blog
 Route::get('blogs/top-stories', [BlogController::class, 'topStories']);

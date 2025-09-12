@@ -82,52 +82,52 @@ class ReviewController extends Controller
         ]);
     }
 
-    // public function update(Request $request, ProgramReview $review)
-    // {
-    //     try {
-    //         $request->validate([
-    //             'reviewer_name'  => 'sometimes|required|string|max:255',
-    //             'review'         => 'sometimes|required|string',
-    //             'rating'         => 'sometimes|required|integer|min:1|max:5',
-    //             'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-    //             'featured'       => 'sometimes|boolean',
-    //         ]);
+    public function update(Request $request, ProgramReview $review)
+    {
+        try {
+            $request->validate([
+                'reviewer_name'  => 'sometimes|required|string|max:255',
+                'review'         => 'sometimes|required|string',
+                'rating'         => 'sometimes|required|integer|min:1|max:5',
+                'image'          => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+                'featured'       => 'sometimes|boolean',
+            ]);
 
-    //         $data = $request->only([
-    //             'reviewer_name',
-    //             'review',
-    //             'rating',
-    //             'featured',
-    //         ]);
+            $data = $request->only([
+                'reviewer_name',
+                'review',
+                'rating',
+                'featured',
+            ]);
 
-    //         if ($request->hasFile('image')) {
-    //             // delete old image if exists
-    //             if ($review->image && file_exists(public_path('storage/' . $review->image))) {
-    //                 unlink(public_path('storage/' . $review->image));
-    //             }
+            if ($request->hasFile('image')) {
+                // delete old image if exists
+                if ($review->image && file_exists(public_path('storage/' . $review->image))) {
+                    unlink(public_path('storage/' . $review->image));
+                }
 
-    //             // save new image
-    //             $data['image'] = $request->file('image')->store('reviews', 'public');
-    //         }
+                // save new image
+                $data['image'] = $request->file('image')->store('reviews', 'public');
+            }
 
-    //         $review->update($data);
+            $review->update($data);
 
-    //         if ($review->image) {
-    //             $review->image = asset('storage/' . $review->image);
-    //         }
+            if ($review->image) {
+                $review->image = asset('storage/' . $review->image);
+            }
 
-    //         return response()->json([
-    //             'status'  => true,
-    //             'message' => 'Review updated successfully',
-    //             'data'    => $review
-    //         ], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status'  => false,
-    //             'message' => 'Something went wrong: ' . $e->getMessage(),
-    //         ], 500);
-    //     }
-    // }
+            return response()->json([
+                'status'  => true,
+                'message' => 'Review updated successfully',
+                'data'    => $review
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
 
